@@ -10,9 +10,9 @@ Download the latest RocksDB backup from the S3 bucket.
 
 ## 3. Update the `.env` File
 
-Make sure to update the `.env` file with the correct configuration settings for each microservice as needed.
+Download the `.env` example file from [GitHub](https://github.com/metaplex-foundation/aura/blob/main/.env.example) and update it with the correct configuration settings for each microservice as needed.
 
-## 4. Download Docker Compose File and Set Up PostgreSQL Credentials
+## 4. Download Docker Compose File
 
 Use the `docker-compose.yaml` file directly from [GitHub](https://raw.githubusercontent.com/metaplex-foundation/aura/main/docker-compose.yaml).
 
@@ -28,14 +28,14 @@ docker compose -f docker-compose.yaml up -d ingester
 
 ## 6. Run ETL
 
-### 5.1 Backup Solana Snapshot to the Server with Aura
+### 6.1 Backup Solana Snapshot to the Server with Aura
 
 Copy the most recent files from the Solana node snapshot directory:
 
 - incremental-snapshot-\*.tar.zs
 - snapshot-\*.tar.zst
 
-### 5.2 Start ETL Process
+### 6.2 Start ETL Process
 
 Run the ETL service to process the snapshots and RocksDB backups:
 
@@ -86,6 +86,7 @@ docker compose -f docker-compose.yaml up -d das-api
 ```
 
 ### API Health Check
+
 Use this command to verify the status of the `das-api` service:
 
 ```bash

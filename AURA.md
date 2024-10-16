@@ -36,6 +36,32 @@ Download the `Makefile` from [GitHub](https://github.com/metaplex-foundation/aur
 make start
 ```
 
+### Verify `ingester` Startup
+
+To verify that the `ingester` service has started correctly, you have the following options:
+
+**Option 1:** Manually check the metrics:
+
+- Check the value of `ingester_buffers{name="buffer_transactions"}` is 0 using:
+
+  ```bash
+  curl -s localhost:9091/metrics | grep 'ingester_buffers{name="buffer_transactions"}' | awk '{print $2}'
+  ```
+
+- Check that the value of `ingester_processed_total{name="accounts_dynamic_merge_with_batch",status="SUCCESS"}` is increasing over time using:
+
+  ```bash
+  curl -s localhost:9091/metrics | grep 'ingester_processed_total{name="accounts_dynamic_merge_with_batch",status="SUCCESS"}' | awk '{print $2}'
+  ```
+
+**Option 2:** Run the following command to automate the verification using `make check-ingester`:
+
+```bash
+make check-ingester
+```
+
+The process will complete with the message "Container ingester has successfully started and is operating correctly."
+
 ## 6. Run ETL
 
 ### 6.1 Backup Solana Snapshot to the Server with Aura
@@ -77,23 +103,29 @@ make start-synchronizer
 
 ### Synchronization Check
 
-Run the following command to continuously check the synchronization status:
+**Option 1:** Manually check the synchronization status:
+
+Run the following command to continuously check the synchronization status until the slot difference is below the threshold:
 
 ```bash
+INGESTER_RPC_HOST=$(docker exec ingester env | grep INGESTER_RPC_HOST | cut -d "=" -f2)
 docker exec -it synchronizer sh -c '
 while true; do
-  solana_slot=$(curl -s -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0","id": 1,"method": "getSlot","params": [{"commitment": "processed"}]}' $INGESTER_RPC_HOST | grep -oP "(?<=\"result\":)[0-9]+");
-  synchronizer_slot=$(curl -s localhost:$SYNCHRONIZER_METRICS_PORT/metrics | grep "synchronizer_last_synchronized_slot{name=\"last_synchronized_slot\"}" | awk '{print $2}');
+  solana_slot=$(curl -s -X POST -H "Content-Type: application/json" -d '''{"jsonrpc": "2.0","id": 1,"method": "getSlot","params": [{"commitment": "processed"}]}''' $INGESTER_RPC_HOST | grep -oP "(?<=\"result\":)[0-9]+");
+  synchronizer_slot=$(curl -s localhost:$SYNCHRONIZER_METRICS_PORT/metrics | grep "synchronizer_last_synchronized_slot{name=\"last_synchronized_slot\"}" | awk '''{print $2}''');
   difference=$((solana_slot - synchronizer_slot));
   echo "Solana slot: $solana_slot";
   echo "Synchronizer last synchronized slot: $synchronizer_slot";
   echo "Difference: $difference slots";
-  if [ "$difference" -lt 50 ]; then break; fi;
+  if [ "$difference" -lt 50 ]; then
+    echo "Slot difference is below threshold";
+    break;
+  fi;
   sleep 5;
 done'
 ```
 
-**Option 2:** Use the Makefile to check the synchronization status:
+**Option 2:** Use the Makefile to check the synchronization status. This should complete with the message "Slot difference is below threshold":
 
 ```bash
 make check-synchronizer

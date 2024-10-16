@@ -20,10 +20,20 @@ Update the file with your PostgreSQL credentials to ensure that both the usernam
 
 ## 5. Start the `ingester`
 
-Run the following Docker Compose command to start the `ingester` service using the downloaded `docker-compose.yaml` file:
+You can start the `ingester` service using one of the following methods:
+
+**Option 1:** Run the following Docker Compose command:
 
 ```bash
 docker compose -f docker-compose.yaml up -d ingester
+```
+
+**Option 2:** Use the Makefile to start the service:
+
+Download the `Makefile` from [GitHub](https://github.com/metaplex-foundation/aura/blob/main/Makefile) and run:
+
+```bash
+make start
 ```
 
 ## 6. Run ETL
@@ -51,10 +61,18 @@ All snapshot files processed successfully.
 
 ## 7. Start the Synchronizer
 
-Run the following command to start the synchronizer using the downloaded `docker-compose.yaml` file:
+You can start the synchronizer using one of the following methods:
+
+**Option 1:** Run the following Docker Compose command:
 
 ```bash
 docker compose -f docker-compose.yaml up -d synchronizer
+```
+
+**Option 2:** Use the Makefile to start the service:
+
+```bash
+make start-synchronizer
 ```
 
 ### Synchronization Check
@@ -75,14 +93,26 @@ while true; do
 done'
 ```
 
-We can also add this logic to `make check-synchronizer` for convenience.
+**Option 2:** Use the Makefile to check the synchronization status:
+
+```bash
+make check-synchronizer
+```
 
 ## 8. Start the API
 
-Run the following Docker Compose command to start the `das-api` using the downloaded `docker-compose.yaml` file:
+You can start the `das-api` service using one of the following methods:
+
+**Option 1:** Run the following Docker Compose command:
 
 ```bash
 docker compose -f docker-compose.yaml up -d das-api
+```
+
+**Option 2:** Use the Makefile to start the service:
+
+```bash
+make start-api
 ```
 
 ### API Health Check

@@ -20,7 +20,7 @@ Update the file with your PostgreSQL credentials to ensure that both the usernam
 
 ## 5. Start the `ingester`
 
-You can start the `ingester` service using one of the following methods:
+You can start the `ingester` service using one of the methods:
 
 **Option 1:** Run the following Docker Compose command:
 
@@ -38,9 +38,9 @@ make start
 
 ### Verify `ingester` Startup
 
-To verify that the `ingester` service has started correctly, you have the following options:
+To verify that the `ingester` service has started correctly, you have these options:
 
-**Option 1:** Manually check the metrics:
+**Option 1:** Manually verify the metrics:
 
 - Check the value of `ingester_buffers{name="buffer_transactions"}` is 0 using:
 
@@ -54,7 +54,7 @@ To verify that the `ingester` service has started correctly, you have the follow
   curl -s localhost:9091/metrics | grep 'ingester_processed_total{name="accounts_dynamic_merge_with_batch",status="SUCCESS"}' | awk '{print $2}'
   ```
 
-**Option 2:** Run the following command to automate the verification using `make check-ingester`:
+**Option 2:** Use the Makefile to automate verification:
 
 ```bash
 make check-ingester
@@ -87,7 +87,7 @@ All snapshot files processed successfully.
 
 ## 7. Start the Synchronizer
 
-You can start the synchronizer using one of the following methods:
+You can start the synchronizer using one of the methods:
 
 **Option 1:** Run the following Docker Compose command:
 
@@ -105,7 +105,7 @@ make start-synchronizer
 
 **Option 1:** Manually check the synchronization status:
 
-Run the following command to continuously check the synchronization status until the slot difference is below the threshold:
+Use the following command to continuously check the synchronization status until the slot difference is below the threshold:
 
 ```bash
 INGESTER_RPC_HOST=$(docker exec ingester env | grep INGESTER_RPC_HOST | cut -d "=" -f2)
@@ -133,7 +133,7 @@ make check-synchronizer
 
 ## 8. Start the API
 
-You can start the `das-api` service using one of the following methods:
+You can start the `das-api` service using one of the methods:
 
 **Option 1:** Run the following Docker Compose command:
 

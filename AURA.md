@@ -10,7 +10,7 @@ Download the latest RocksDB backup from the S3 bucket.
 Make sure to update the `.env` file with the correct configuration settings for each microservice as needed.
 
 ## 4. Start the `ingester`
-Run the following Docker Compose command to start the `ingester` service:
+Run the following Docker Compose command to start the `ingester` service using the `docker-compose.yaml` file from the [Metaplex Aura repository](https://github.com/metaplex-foundation/aura):
 
 ```bash
 docker compose -f docker-compose.yaml up -d ingester
@@ -37,7 +37,7 @@ All snapshot files processed successfully.
 ```
 
 ## 6. Start the Synchronizer
-Run the following command to start the synchronizer:
+Run the following command to start the synchronizer using the `docker-compose.yaml` file from the [Metaplex Aura repository](https://github.com/metaplex-foundation/aura):
 
 ```bash
 docker compose -f docker-compose.yaml up -d synchronizer
@@ -60,13 +60,13 @@ while true; do
 done'
 ```
 
-We can also add this logic to `make check-synchronizer` for convenience.
+You can also add this logic to `make check-synchronizer` for convenience.
 
 ## 7. Start the API
-Run the following Docker Compose command to start the `das-api`:
+Run the following Docker Compose command to start the `das-api` using the `docker-compose.yaml` file from the [Metaplex Aura repository](https://github.com/metaplex-foundation/aura):
 
 ```bash
-docker compose -f docker-compose.yaml up -d das-api
+docker compose -f https://raw.githubusercontent.com/metaplex-foundation/aura/main/docker-compose.yaml up -d das-api
 ```
 
 ### API Health Check

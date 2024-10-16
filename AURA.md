@@ -1,30 +1,42 @@
 # Step-by-Step Guide to Launching Metaplex Aura
 
 ## 1. Launch the Solana Node
+
 Set up and launch your Solana node according to the official Solana documentation.
 
 ## 2. Download RocksDB Backup from the S3 Bucket
+
 Download the latest RocksDB backup from the S3 bucket.
 
 ## 3. Update the `.env` File
+
 Make sure to update the `.env` file with the correct configuration settings for each microservice as needed.
 
-## 4. Start the `ingester`
-Run the following Docker Compose command to start the `ingester` service using the `docker-compose.yaml` file from the [Metaplex Aura repository](https://github.com/metaplex-foundation/aura):
+## 4. Download Docker Compose File and Set Up PostgreSQL Credentials
+
+Use the `docker-compose.yaml` file directly from [GitHub](https://raw.githubusercontent.com/metaplex-foundation/aura/main/docker-compose.yaml).
+
+Update the file with your PostgreSQL credentials to ensure that both the username and password are set properly for secure access.
+
+## 5. Start the `ingester`
+
+Run the following Docker Compose command to start the `ingester` service using the downloaded `docker-compose.yaml` file:
 
 ```bash
 docker compose -f docker-compose.yaml up -d ingester
 ```
 
-## 5. Run ETL
+## 6. Run ETL
 
 ### 5.1 Backup Solana Snapshot to the Server with Aura
+
 Copy the most recent files from the Solana node snapshot directory:
 
-- incremental-snapshot-*.tar.zs
-- snapshot-*.tar.zst
+- incremental-snapshot-\*.tar.zs
+- snapshot-\*.tar.zst
 
 ### 5.2 Start ETL Process
+
 Run the ETL service to process the snapshots and RocksDB backups:
 
 ```bash
@@ -32,18 +44,21 @@ docker run -it --rm -d --name solana-snapshot-etl -p 5000:5000 -v /path/to/snaps
 ```
 
 Wait for the ETL process to complete. Success is indicated by the message:
+
 ```console
 All snapshot files processed successfully.
 ```
 
-## 6. Start the Synchronizer
-Run the following command to start the synchronizer using the `docker-compose.yaml` file from the [Metaplex Aura repository](https://github.com/metaplex-foundation/aura):
+## 7. Start the Synchronizer
+
+Run the following command to start the synchronizer using the downloaded `docker-compose.yaml` file:
 
 ```bash
 docker compose -f docker-compose.yaml up -d synchronizer
 ```
 
 ### Synchronization Check
+
 Run the following command to continuously check the synchronization status:
 
 ```bash
@@ -60,13 +75,14 @@ while true; do
 done'
 ```
 
-You can also add this logic to `make check-synchronizer` for convenience.
+We can also add this logic to `make check-synchronizer` for convenience.
 
-## 7. Start the API
-Run the following Docker Compose command to start the `das-api` using the `docker-compose.yaml` file from the [Metaplex Aura repository](https://github.com/metaplex-foundation/aura):
+## 8. Start the API
+
+Run the following Docker Compose command to start the `das-api` using the downloaded `docker-compose.yaml` file:
 
 ```bash
-docker compose -f https://raw.githubusercontent.com/metaplex-foundation/aura/main/docker-compose.yaml up -d das-api
+docker compose -f docker-compose.yaml up -d das-api
 ```
 
 ### API Health Check
